@@ -62,6 +62,9 @@ class AeternaApp {
         // Setup Devotional Audio Narration
         this.setupDevotionalAudio();
 
+        // Setup Bússola Espiritual (Surprise Feature)
+        this.setupBussolaEspiritual();
+
         // Initial Screen render (if logged in, the auth check handles screen, otherwise we render)
         if (this.currentUser) {
             await this.renderCurrentScreen();
@@ -2560,6 +2563,150 @@ class AeternaApp {
                     <span></span><span></span><span></span>
                 </div>
             `;
+        }
+    }
+    // ==========================================================================
+    //  🧭 BÚSSOLA ESPIRITUAL — SPIRITUAL COMPASS
+    //  Selects personalized Bible verses based on the user's current
+    //  emotional state, providing comfort, guidance, and wisdom.
+    // ==========================================================================
+    
+    setupBussolaEspiritual() {
+        const fab = document.getElementById('fab-bussola');
+        const overlay = document.getElementById('bussola-overlay');
+        const btnClose = document.getElementById('btn-bussola-close');
+        const btnNew = document.getElementById('btn-bussola-new');
+        const btnShare = document.getElementById('btn-bussola-share');
+        
+        if (!fab || !overlay) return;
+        
+        fab.addEventListener('click', () => this.openBussola());
+        
+        if (btnClose) btnClose.addEventListener('click', () => this.closeBussola());
+        if (btnNew) btnNew.addEventListener('click', () => {
+            const result = document.getElementById('bussola-result');
+            if (result) result.classList.remove('visible');
+            document.querySelectorAll('.bussola-emotion-btn').forEach(b => b.classList.remove('active'));
+        });
+        if (btnShare) btnShare.addEventListener('click', () => this.shareBussola());
+        
+        // Emotion button listeners
+        document.querySelectorAll('.bussola-emotion-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const emotion = e.currentTarget.getAttribute('data-emotion');
+                document.querySelectorAll('.bussola-emotion-btn').forEach(b => b.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+                this.displayBussolaVerse(emotion);
+            });
+        });
+        
+        // Close on Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && overlay.classList.contains('visible')) {
+                this.closeBussola();
+            }
+        });
+    }
+    
+    openBussola() {
+        const overlay = document.getElementById('bussola-overlay');
+        if (overlay) {
+            overlay.classList.add('visible');
+            const result = document.getElementById('bussola-result');
+            if (result) result.classList.remove('visible');
+            document.querySelectorAll('.bussola-emotion-btn').forEach(b => b.classList.remove('active'));
+        }
+    }
+    
+    closeBussola() {
+        const overlay = document.getElementById('bussola-overlay');
+        if (overlay) {
+            overlay.style.transition = 'all 0.3s ease';
+            overlay.classList.remove('visible');
+        }
+    }
+    
+    getBussolaVerses() {
+        return {
+            ansiedade: [
+                { ref: 'Filipenses 4:6-7', text: 'Não andeis ansiosos de coisa alguma; em tudo, porém, sejam conhecidas, diante de Deus, as vossas petições, pela oração e pela súplica, com ações de graças. E a paz de Deus, que excede todo o entendimento, guardará o vosso coração e a vossa mente em Cristo Jesus.', devotional: 'A ansiedade é real, mas Deus nos convida a trocar a preocupação pela oração. Cada vez que a mente quiser correr para o pior cenário, redirecione-a para uma conversa com o Pai. Ele não ignora o que você sente — Ele guarda o que você entrega.' },
+                { ref: '1 Pedro 5:7', text: 'Lançando sobre ele toda a vossa ansiedade, porque ele tem cuidado de vós.', devotional: 'Lançar significa soltar de verdade. Não é segurar a corda enquanto finge confiar. Deus cuida de você com a mesma intensidade que criou o universo — com propósito, detalhe e amor inabalável.' },
+                { ref: 'Mateus 6:34', text: 'Portanto, não vos inquieteis com o dia de amanhã, pois o amanhã trará os seus cuidados; basta ao dia o seu próprio mal.', devotional: 'Jesus nos liberta da tirania do amanhã. Viva o hoje com presença e gratidão. O futuro pertence a quem já o conhece — e Ele prometeu estar lá quando você chegar.' },
+                { ref: 'Salmos 55:22', text: 'Entrega o teu caminho ao Senhor, e ele te susterá; não permitirá jamais que o justo seja abalado.', devotional: 'Entregar não é fraqueza — é a maior demonstração de confiança. Quando você solta o controle, descobre que sempre houve Alguém segurando tudo com firmeza.' }
+            ],
+            tristeza: [
+                { ref: 'Salmos 34:18', text: 'Perto está o Senhor dos que têm o coração quebrantado e salva os de espírito oprimido.', devotional: 'Deus não foge da sua dor. Ele se aproxima. Nos momentos mais difíceis, Sua presença é mais real do que nunca. Permita-se sentir e, ao mesmo tempo, permita-se ser abraçado.' },
+                { ref: 'Isaías 41:10', text: 'Não temas, porque eu sou contigo; não te assombres, porque eu sou o teu Deus; eu te fortaleço, e te ajudo, e te sustento com a minha destra fiel.', devotional: 'A tristeza pode parecer um oceano sem fim, mas existe um Deus que caminha sobre as águas. Ele não prometeu remover a tempestade, mas prometeu segurar você durante ela.' },
+                { ref: 'Apocalipse 21:4', text: 'E lhes enxugará dos olhos toda lágrima, e a morte já não existirá, já não haverá luto, nem pranto, nem dor, porque as primeiras coisas passaram.', devotional: 'A tristeza é temporária. A eternidade com Deus é permanente. Cada lágrima que você derrama hoje será pessoalmente enxugada pelo Criador do universo.' }
+            ],
+            medo: [
+                { ref: 'Josué 1:9', text: 'Não to mandei eu? Esforça-te e tem bom ânimo; não pasmes, nem te espantes, porque o Senhor, teu Deus, é contigo, por onde quer que andares.', devotional: 'O medo grita que você está sozinho. A verdade sussurra que o Deus do universo está ao seu lado. Coragem não é ausência de medo — é avançar sabendo que Ele vai na frente.' },
+                { ref: '2 Timóteo 1:7', text: 'Porque Deus não nos deu o espírito de covardia, mas de poder, de amor e de moderação.', devotional: 'O medo não vem de Deus. O que Ele coloca dentro de você é poder para enfrentar, amor para perseverar e equilíbrio para discernir. Recuse o que não foi plantado pelo Pai.' },
+                { ref: 'Salmos 23:4', text: 'Ainda que eu ande pelo vale da sombra da morte, não temerei mal nenhum, porque tu estás comigo; o teu bordão e o teu cajado me consolam.', devotional: 'Os vales existem, mas nunca são destinos finais — são passagens. E nenhuma sombra resiste à luz de quem caminha com o Pastor.' }
+            ],
+            gratidao: [
+                { ref: '1 Tessalonicenses 5:18', text: 'Em tudo dai graças, porque esta é a vontade de Deus em Cristo Jesus para convosco.', devotional: 'Gratidão não depende de circunstâncias perfeitas. É uma decisão poderosa que transforma o olhar. Quando você agradece, declara que Deus é maior que qualquer problema.' },
+                { ref: 'Salmos 107:1', text: 'Rendei graças ao Senhor, porque ele é bom; porque a sua misericórdia dura para sempre.', devotional: 'A bondade de Deus não tem prazo de validade. Cada manhã é uma prova viva de Sua fidelidade. Agradecer é reconhecer o óbvio que o mundo tenta esconder.' },
+                { ref: 'Colossenses 3:15', text: 'E a paz de Cristo, para a qual também fostes chamados em um corpo, domine em vossos corações; e sede agradecidos.', devotional: 'Paz e gratidão caminham juntas. Quando o coração agradece, a mente descansa. Você foi chamado para viver nessa harmonia.' }
+            ],
+            raiva: [
+                { ref: 'Efésios 4:26-27', text: 'Irai-vos e não pequeis; não se ponha o sol sobre a vossa ira, nem deis lugar ao diabo.', devotional: 'Sentir raiva é humano. O que você faz com ela define seu caráter. Não permita que a frustração de hoje se torne a amargura de amanhã. Processe, ore e libere.' },
+                { ref: 'Provérbios 15:1', text: 'A resposta branda desvia o furor, mas a palavra dura suscita a ira.', devotional: 'A gentileza não é fraqueza — é estratégia divina. Uma palavra mansa desarma mais do que mil argumentos. Escolha a sabedoria antes da reação.' },
+                { ref: 'Tiago 1:19-20', text: 'Todo homem seja pronto para ouvir, tardio para falar, tardio para se irar. Porque a ira do homem não produz a justiça de Deus.', devotional: 'Ouvir mais e reagir menos é um superpoder espiritual. A justiça de Deus flui através da paciência, não da explosão.' }
+            ],
+            sabedoria: [
+                { ref: 'Tiago 1:5', text: 'Se algum de vós tem falta de sabedoria, peça-a a Deus, que a todos dá liberalmente e não censura; e ser-lhe-á concedida.', devotional: 'Deus não julga sua pergunta — Ele honra sua humildade. Pedir sabedoria é o primeiro ato sábio. Ele dá sem medir, sem cobrar e sem criticar.' },
+                { ref: 'Provérbios 3:5-6', text: 'Confia no Senhor de todo o teu coração e não te estribes no teu próprio entendimento. Reconhece-o em todos os teus caminhos, e ele endireitará as tuas veredas.', devotional: 'A verdadeira sabedoria começa quando paramos de confiar apenas em nossas conclusões. Render o controle ao Pai é a decisão mais inteligente que existe.' },
+                { ref: 'Provérbios 4:7', text: 'O princípio da sabedoria é: Adquire a sabedoria; sim, com tudo o que possuis, adquire o entendimento.', devotional: 'Sabedoria não é apenas conhecimento — é aplicação divina do conhecimento. Busque-a como tesouro, porque ela ilumina cada decisão da vida.' }
+            ],
+            solidao: [
+                { ref: 'Deuteronômio 31:6', text: 'Esforçai-vos, e tende bom ânimo; não temais, nem vos espanteis por causa deles, porque o Senhor, vosso Deus, é o que vai convosco; não vos deixará, nem vos desamparará.', devotional: 'Solidão é um sentimento, não uma realidade espiritual. O Deus que nunca dorme está sempre ao seu lado. Mesmo quando o mundo silencia, Ele continua falando ao seu coração.' },
+                { ref: 'Salmos 139:7-10', text: 'Para onde me irei do teu Espírito ou para onde fugirei da tua face? Se subir ao céu, tu aí estás; se fizer a minha cama no mais profundo abismo, lá tu estás também.', devotional: 'Não existe lugar no universo onde você esteja fora do alcance de Deus. No pico mais alto ou no vale mais fundo, Ele já está lá esperando por você.' },
+                { ref: 'Mateus 28:20', text: 'Eis que eu estou convosco todos os dias, até a consumação dos séculos.', devotional: 'Jesus não disse "às vezes" ou "quando for conveniente". Ele disse TODOS os dias. Essa promessa não tem exceção, não tem limite e não tem fim.' }
+            ],
+            esperanca: [
+                { ref: 'Jeremias 29:11', text: 'Pois eu sei os planos que tenho para vocês, diz o Senhor, planos de fazê-los prosperar e não de causar dano, planos de dar a vocês esperança e um futuro.', devotional: 'O futuro não é caos — é projeto divino. Cada dia que você vive faz parte de um plano maior que seus olhos ainda não enxergam. Confie no Arquiteto.' },
+                { ref: 'Romanos 8:28', text: 'E sabemos que todas as coisas cooperam para o bem daqueles que amam a Deus, daqueles que são chamados segundo o seu propósito.', devotional: 'Nem tudo que acontece é bom, mas tudo que acontece pode ser transformado em bem nas mãos de Deus. Ele é o Mestre em transformar dor em propósito.' },
+                { ref: 'Isaías 40:31', text: 'Mas os que esperam no Senhor renovarão as suas forças, subirão com asas como águias, correrão e não se cansarão, caminharão e não se fatigarão.', devotional: 'Esperar em Deus não é passividade — é renovação ativa. Enquanto você espera, Ele fortalece. Quando chegar a hora de voar, suas asas estarão prontas.' }
+            ]
+        };
+    }
+    
+    displayBussolaVerse(emotion) {
+        const versesDB = this.getBussolaVerses();
+        const verses = versesDB[emotion];
+        if (!verses || verses.length === 0) return;
+        
+        const randomIdx = Math.floor(Math.random() * verses.length);
+        const selected = verses[randomIdx];
+        
+        this._currentBussola = selected;
+        
+        const verseText = document.getElementById('bussola-verse-text');
+        const verseRef = document.getElementById('bussola-verse-ref');
+        const devotionalText = document.getElementById('bussola-devotional-text');
+        const result = document.getElementById('bussola-result');
+        
+        if (verseText) verseText.textContent = '"' + selected.text + '"';
+        if (verseRef) verseRef.textContent = '— ' + selected.ref;
+        if (devotionalText) devotionalText.textContent = selected.devotional;
+        if (result) result.classList.add('visible');
+    }
+    
+    async shareBussola() {
+        if (!this._currentBussola) return;
+        const v = this._currentBussola;
+        const text = `"${v.text}"\n\n— ${v.ref}\n\n💬 ${v.devotional}\n\n🧭 Bússola Espiritual — Aeterna`;
+        
+        if (navigator.share) {
+            try {
+                await navigator.share({ title: 'Bússola Espiritual — Aeterna', text });
+            } catch (e) { /* User cancelled */ }
+        } else {
+            try {
+                await navigator.clipboard.writeText(text);
+                this.showShareCopiedNotification();
+            } catch (e) { /* Clipboard blocked */ }
         }
     }
 }

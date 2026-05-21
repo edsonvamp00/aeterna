@@ -3445,6 +3445,290 @@ input:checked + .slider:before {
     border-color: rgba(0, 0, 0, 0.08);
 }
 
+/* === LIGHT THEME — Study Drawer === */
+[data-theme='light'] .study-bottom-sheet {
+    background: rgba(245, 240, 232, 0.98);
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.12);
+}
+[data-theme='light'] .drawer-handle { background: rgba(0, 0, 0, 0.12); }
+[data-theme='light'] .drawer-verse-text { color: rgba(26, 26, 46, 0.85); }
+
+/* === LIGHT THEME — Revelação Divina === */
+[data-theme='light'] .revelacao-overlay { background: rgba(245, 240, 232, 0.98); }
+[data-theme='light'] .revelacao-verse { color: rgba(26, 26, 46, 0.9); }
+[data-theme='light'] .revelacao-ref { color: var(--color-accent); }
+[data-theme='light'] .revelacao-btn {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.1);
+    color: rgba(26, 26, 46, 0.8);
+}
+[data-theme='light'] .revelacao-btn:hover {
+    background: rgba(184, 134, 11, 0.1);
+    border-color: rgba(184, 134, 11, 0.3);
+}
+
+/* === LIGHT THEME — Share Card === */
+[data-theme='light'] .share-card-container {
+    background: rgba(245, 240, 232, 0.98);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+/* === LIGHT THEME — Progress Map === */
+[data-theme='light'] .bible-testament-label { color: rgba(26, 26, 46, 0.6); }
+[data-theme='light'] .progress-book-cell.status-none {
+    background: rgba(0, 0, 0, 0.04);
+    color: rgba(26, 26, 46, 0.5);
+}
+[data-theme='light'] .mural-subtitle { color: rgba(26, 26, 46, 0.5); }
+[data-theme='light'] .reader-header h2 { color: #1A1A2E; }
+[data-theme='light'] .no-plan-message { color: rgba(26, 26, 46, 0.5); }
+[data-theme='light'] .plan-title { color: #1A1A2E; }
+
+/* === LIGHT THEME — Bússola Espiritual === */
+[data-theme='light'] .bussola-overlay { background: rgba(245, 240, 232, 0.98); }
+[data-theme='light'] .bussola-card {
+    background: rgba(255, 255, 255, 0.85);
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
+}
+[data-theme='light'] .bussola-verse-text { color: rgba(26, 26, 46, 0.88); }
+[data-theme='light'] .bussola-question { color: #1A1A2E; }
+[data-theme='light'] .bussola-emotion-btn {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.08);
+    color: rgba(26, 26, 46, 0.75);
+}
+[data-theme='light'] .bussola-emotion-btn:hover,
+[data-theme='light'] .bussola-emotion-btn.active {
+    background: rgba(184, 134, 11, 0.1);
+    border-color: rgba(184, 134, 11, 0.3);
+    color: var(--color-accent);
+}
+[data-theme='light'] .bussola-devotional {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.06);
+}
+[data-theme='light'] .bussola-devotional-text { color: rgba(26, 26, 46, 0.7); }
+[data-theme='light'] .bussola-btn {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.08);
+    color: rgba(26, 26, 46, 0.7);
+}
+[data-theme='light'] .fab-bussola {
+    background: linear-gradient(135deg, rgba(184, 134, 11, 0.15) 0%, rgba(255, 255, 255, 0.9) 100%);
+    box-shadow: 0 4px 20px rgba(184, 134, 11, 0.1);
+}
+
+/* ==========================================================================
+   🧭 BÚSSOLA ESPIRITUAL — SPIRITUAL COMPASS
+   Personalized verse direction based on emotional state.
+   ========================================================================== */
+.bussola-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10, 10, 20, 0.96);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s ease;
+}
+.bussola-overlay.visible { opacity: 1; visibility: visible; }
+
+.bussola-card {
+    position: relative;
+    width: calc(100% - 40px);
+    max-width: 480px;
+    max-height: 85vh;
+    overflow-y: auto;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    padding: 32px 24px;
+    backdrop-filter: blur(40px);
+    animation: revelacaoContentIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bussola-header { text-align: center; margin-bottom: 24px; }
+.bussola-compass-icon {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 8px;
+    animation: compassPulse 3s ease-in-out infinite;
+}
+@keyframes compassPulse {
+    0%, 100% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 10px rgba(227, 167, 91, 0.3)); }
+    50% { transform: scale(1.1) rotate(15deg); filter: drop-shadow(0 0 20px rgba(227, 167, 91, 0.5)); }
+}
+.bussola-title {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--color-accent);
+    margin-bottom: 4px;
+}
+.bussola-subtitle { font-size: 0.78rem; color: var(--color-muted); }
+.bussola-question {
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    text-align: center;
+    margin-bottom: 16px;
+}
+.bussola-emotions-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 24px;
+}
+.bussola-emotion-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--color-secondary);
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.bussola-emotion-btn:hover {
+    background: rgba(227, 167, 91, 0.08);
+    border-color: rgba(227, 167, 91, 0.2);
+    color: var(--color-accent);
+    transform: translateY(-2px);
+}
+.bussola-emotion-btn.active {
+    background: rgba(227, 167, 91, 0.12);
+    border-color: rgba(227, 167, 91, 0.4);
+    color: var(--color-accent);
+    box-shadow: 0 4px 20px rgba(227, 167, 91, 0.15);
+}
+.bussola-emotion-icon { font-size: 1.2rem; }
+.bussola-result { display: none; animation: revelacaoContentIn 0.6s ease-out; }
+.bussola-result.visible { display: block; }
+.bussola-verse-box {
+    position: relative;
+    padding: 24px 20px;
+    border-radius: 16px;
+    background: rgba(227, 167, 91, 0.05);
+    border: 1px solid rgba(227, 167, 91, 0.12);
+    margin-bottom: 16px;
+}
+.bussola-verse-text {
+    font-family: var(--font-scripture);
+    font-size: 1.05rem;
+    font-style: italic;
+    line-height: 1.7;
+    color: var(--color-primary);
+    margin-bottom: 10px;
+}
+.bussola-verse-ref {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--color-accent);
+    text-align: right;
+}
+.bussola-devotional {
+    padding: 16px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    margin-bottom: 16px;
+}
+.bussola-devotional-title {
+    font-family: var(--font-heading);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--color-accent);
+    margin-bottom: 8px;
+}
+.bussola-devotional-text {
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: var(--color-secondary);
+}
+.bussola-actions { display: flex; gap: 10px; margin-top: 20px; }
+.bussola-btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--color-secondary);
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.bussola-btn:hover {
+    background: rgba(227, 167, 91, 0.1);
+    border-color: rgba(227, 167, 91, 0.3);
+    color: var(--color-accent);
+}
+.bussola-btn-primary { background: var(--accent-gradient); border: none; color: #fff; }
+.bussola-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(227, 167, 91, 0.3);
+}
+.bussola-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: none;
+    color: var(--color-muted);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 4px;
+    transition: color 0.3s ease;
+}
+.bussola-close:hover { color: var(--color-primary); }
+
+/* Floating Action Button — Bússola Espiritual */
+.fab-bussola {
+    position: fixed;
+    bottom: 90px;
+    left: 20px;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 1px solid rgba(227, 167, 91, 0.3);
+    background: linear-gradient(135deg, rgba(227, 167, 91, 0.2) 0%, rgba(13, 13, 17, 0.9) 100%);
+    color: var(--color-accent);
+    cursor: pointer;
+    z-index: 89;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    transition: var(--transition-smooth);
+    box-shadow: 0 4px 20px rgba(227, 167, 91, 0.15);
+    overflow: hidden;
+}
+.fab-bussola:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 30px rgba(227, 167, 91, 0.3);
+    border-color: rgba(227, 167, 91, 0.5);
+}
+.fab-bussola:active { transform: scale(0.95); }
+
 /* ==========================================================================
    MOBILE-FIRST PREMIUM RESPONSIVE OVERRIDES
    Optimized for all mobile viewports

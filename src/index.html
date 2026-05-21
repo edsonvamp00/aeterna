@@ -554,6 +554,76 @@
         </div>
     </div>
 
+    <!-- ✨ BÚSSOLA ESPIRITUAL — Spiritual Compass Experience ✨ -->
+    <div id="bussola-overlay" class="bussola-overlay">
+        <div class="bussola-card">
+            <button id="btn-bussola-close" class="bussola-close">✕</button>
+            <div class="bussola-header">
+                <span class="bussola-compass-icon">🧭</span>
+                <h2 class="bussola-title">BÚSSOLA ESPIRITUAL</h2>
+                <p class="bussola-subtitle">Descubra a Palavra de Deus para o seu momento</p>
+            </div>
+            
+            <p class="bussola-question">Como está seu coração agora?</p>
+            
+            <div id="bussola-emotions" class="bussola-emotions-grid">
+                <button class="bussola-emotion-btn" data-emotion="ansiedade">
+                    <span class="bussola-emotion-icon">😰</span>
+                    <span>Ansiedade</span>
+                </button>
+                <button class="bussola-emotion-btn" data-emotion="tristeza">
+                    <span class="bussola-emotion-icon">😢</span>
+                    <span>Tristeza</span>
+                </button>
+                <button class="bussola-emotion-btn" data-emotion="medo">
+                    <span class="bussola-emotion-icon">😨</span>
+                    <span>Medo</span>
+                </button>
+                <button class="bussola-emotion-btn" data-emotion="gratidao">
+                    <span class="bussola-emotion-icon">🙏</span>
+                    <span>Gratidão</span>
+                </button>
+                <button class="bussola-emotion-btn" data-emotion="raiva">
+                    <span class="bussola-emotion-icon">😤</span>
+                    <span>Raiva / Frustração</span>
+                </button>
+                <button class="bussola-emotion-btn" data-emotion="sabedoria">
+                    <span class="bussola-emotion-icon">🌿</span>
+                    <span>Sabedoria</span>
+                </button>
+                <button class="bussola-emotion-btn" data-emotion="solidao">
+                    <span class="bussola-emotion-icon">🕊️</span>
+                    <span>Solidão</span>
+                </button>
+                <button class="bussola-emotion-btn" data-emotion="esperanca">
+                    <span class="bussola-emotion-icon">☀️</span>
+                    <span>Esperança</span>
+                </button>
+            </div>
+            
+            <div id="bussola-result" class="bussola-result">
+                <div class="bussola-verse-box">
+                    <blockquote id="bussola-verse-text" class="bussola-verse-text"></blockquote>
+                    <cite id="bussola-verse-ref" class="bussola-verse-ref"></cite>
+                </div>
+                <div class="bussola-devotional">
+                    <div class="bussola-devotional-title">💬 PALAVRA PARA SEU CORAÇÃO</div>
+                    <p id="bussola-devotional-text" class="bussola-devotional-text"></p>
+                </div>
+                <div class="bussola-actions">
+                    <button id="btn-bussola-new" class="bussola-btn">🔄 Outra Palavra</button>
+                    <button id="btn-bussola-share" class="bussola-btn bussola-btn-primary">📤 Compartilhar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Action Button — Bússola Espiritual Trigger -->
+    <button id="fab-bussola" class="fab-bussola" title="Bússola Espiritual — Versículo para seu momento">
+        <span class="fab-glow"></span>
+        🧭
+    </button>
+
     <!-- Floating Action Button — Revelação Divina Trigger -->
     <button id="fab-revelacao" class="fab-revelacao" title="Revelação Divina — Versículo Aleatório">
         <span class="fab-glow"></span>
