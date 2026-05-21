@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Aeterna — Disciplina Espiritual Gamificada</title>
+    
+    <!-- SEO Optimization -->
+    <meta name="description" content="Aeterna: Alcance constância espiritual, vença a ansiedade e controle sua jornada diária de orações e leitura bíblica com gamificação premium.">
+    <meta name="keywords" content="disciplina espiritual, devocional diário, leitura bíblica, oração, ansiedade, paz interior, duolingo bíblia">
+    
+    <!-- Premium Typography System: Cinzel (Luxury Sacred Headings), Cormorant Garamond (Elegant Editorial Scripture), Plus Jakarta Sans (Modern Mobile UI) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Supabase Client Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Core Styling -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- ✨ CELESTIAL LOGIN / REGISTER SCREEN ✨ -->
+    <div id="auth-screen" class="auth-screen">
+        <canvas id="auth-particles" class="auth-particles-canvas"></canvas>
+        <div class="auth-ambient-glow auth-glow-1"></div>
+        <div class="auth-ambient-glow auth-glow-2"></div>
+        
+        <div class="auth-card">
+            <div class="auth-logo">
+                <span class="auth-logo-cross">✝</span>
+                <span class="auth-logo-text">AETERNA</span>
+                <span class="auth-logo-subtitle">Disciplina Espiritual Gamificada</span>
+            </div>
+
+            <!-- LOGIN FORM -->
+            <form id="login-form" class="auth-form">
+                <div id="auth-error" class="auth-error"></div>
+                <div class="auth-input-group">
+                    <label for="login-email">E-mail</label>
+                    <input type="email" id="login-email" class="auth-input" placeholder="seuemail@exemplo.com" required>
+                </div>
+                <div class="auth-input-group">
+                    <label for="login-password">Senha</label>
+                    <input type="password" id="login-password" class="auth-input" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="auth-submit-btn">ENTRAR</button>
+                <div class="auth-switch">
+                    Não tem conta? <button type="button" id="btn-show-register" class="auth-switch-link">Criar conta</button>
+                </div>
+            </form>
+
+            <!-- REGISTER FORM (hidden by default) -->
+            <form id="register-form" class="auth-form" style="display:none;">
+                <div id="register-error" class="auth-error"></div>
+                <div class="auth-input-group">
+                    <label for="register-name">Nome Completo</label>
+                    <input type="text" id="register-name" class="auth-input" placeholder="Seu nome" required>
+                </div>
+                <div class="auth-input-group">
+                    <label for="register-email">E-mail</label>
+                    <input type="email" id="register-email" class="auth-input" placeholder="seuemail@exemplo.com" required>
+                </div>
+                <div class="auth-input-group">
+                    <label for="register-password">Senha</label>
+                    <input type="password" id="register-password" class="auth-input" placeholder="Mínimo 6 caracteres" required minlength="6">
+                </div>
+                <button type="submit" class="auth-submit-btn">CRIAR MINHA CONTA</button>
+                <div class="auth-switch">
+                    Já tem conta? <button type="button" id="btn-show-login" class="auth-switch-link">Fazer login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Premium Glowing Background Effects (Reference: Japan Tours Golden Sunset) -->
+    <div class="ambient-glow golden-glow-1"></div>
+    <div class="ambient-glow golden-glow-2"></div>
+    <div class="ambient-glow sakura-glow"></div>
+
+    <div class="app-container">
+        <!-- HEADER SYSTEM -->
+        <header class="app-header">
+            <div class="header-logo">
+                <span class="logo-text">AETERNA</span>
+            </div>
+            
+            <!-- Gamification Status (Duolingo Style Streak & XP) -->
+            <div class="gamification-status">
+                <div class="streak-container" title="Sua sequência de dias consecutivos fazendo o devocional">
+                    <svg class="icon-fire" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17.66 11.57c-.77-1.39-2.03-2.42-3.25-3.41-1.32-1.07-2.61-2.28-3.06-3.95-.07-.26-.14-.52-.16-.79-.04-.44-.31-.82-.71-1.02-.4-.2-.88-.13-1.22.18-1.57 1.48-2.63 3.51-2.78 5.67-.18 2.56.9 4.96 2.82 6.64.4.35.43.96.08 1.35-.35.4-.96.43-1.35.08-2.52-2.2-3.82-5.46-3.41-8.91.22-1.9.99-3.66 2.18-5.1.32-.38.86-.48 1.29-.25.43.23.68.7.61 1.19-.07.48-.05.97.05 1.45.24 1.13.91 2.11 1.76 2.88 1.25 1.13 2.61 2.21 3.55 3.65.69 1.05 1.09 2.27 1.13 3.53.01.41-.24.78-.63.92-.38.14-.81.01-1.06-.31-.69-.87-1.61-1.54-2.65-1.93-.41-.15-.87.05-1.04.46-.17.41.02.88.42 1.08 1.63.82 2.87 2.24 3.4 3.99.59 1.95.21 4.07-.95 5.74-.2.29-.53.46-.88.46H10c-.3 0-.58-.12-.79-.34-.4-.41-.4-1.07 0-1.48.51-.51.79-1.2.79-1.92 0-1.54-1.25-2.79-2.79-2.79H7c-.55 0-1-.45-1-1 0-.91.54-1.74 1.37-2.1l1.1-.48c.41-.18.63-.64.52-1.08-.11-.44-.52-.73-.97-.68l-1.09.11C5.4 12.35 4 14.99 4 18c0 4.42 3.58 8 8 8s8-3.58 8-8c0-2.32-.99-4.41-2.56-5.88l.22-.55z"/>
+                    </svg>
+                    <span id="streak-counter" class="streak-number">0</span>
+                    <span class="streak-label">DIAS</span>
+                </div>
+                
+                <div class="xp-bar-container">
+                    <div class="xp-label">XP: <span id="xp-text">0</span></div>
+                    <div class="xp-progress-track">
+                        <div id="xp-progress-bar" class="xp-progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Theme Toggle -->
+                <div id="theme-toggle" class="theme-toggle" title="Alternar tema claro/escuro">
+                    <div class="theme-toggle-track">
+                        <div class="theme-toggle-thumb">🌙</div>
+                    </div>
+                </div>
+
+                <!-- Mini Avatar -->
+                <img id="header-avatar" class="header-avatar-mini" src="" alt="Perfil" style="display:none;">
+            </div>
+        </header>
+
+        <!-- MAIN SPA SCREENS CONTAINER -->
+        <main class="app-main-content">
+            
+            <!-- TELA 1: HOME & DEVOCIONAL DIÁRIO -->
+            <section id="screen-home" class="app-screen active">
+                <div class="screen-hero">
+                    <h1 class="hero-title">CONEXÃO DIÁRIA</h1>
+                    <p class="hero-subtitle">Nutra o seu espírito com constância e presença.</p>
+                </div>
+
+                <div class="grid-layout">
+                    <!-- DEVOCIONAL DIÁRIO CARD -->
+                    <div class="glass-card devocional-card animate-card">
+                        <div class="card-tag">DEVOCIONAL DO DIA</div>
+                        <div id="devocional-date" class="devocional-date">21 de Maio</div>
+                        
+                        <div class="verse-quote-box">
+                            <span class="quote-mark">“</span>
+                            <blockquote id="devocional-verse-text" class="verse-quote">
+                                Confia no Senhor de todo o teu coração, e não te estribes no teu próprio entendimento...
+                            </blockquote>
+                            <cite id="devocional-verse-ref" class="verse-citation">Provérbios 3:5-6</cite>
+                        </div>
+
+                        <div class="devocional-body">
+                            <h3>Reflexão</h3>
+                            <p id="devocional-reflection">Viver dependente de nossas próprias conclusões gera estresse e cansaço. A verdadeira fé envolve render o volante da nossa trajetória a Alguém que enxerga o panorama completo...</p>
+                            
+                            <h3>Oração Guiada</h3>
+                            <p id="devocional-prayer" class="prayer-box">Pai querido, decido não confiar em minha inteligência limitada. Guia-me em cada escolha hoje...</p>
+
+                            <div class="challenge-box">
+                                <div class="challenge-title">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-challenge">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <path d="M12 8v4l3 3"></path>
+                                    </svg>
+                                    <span>Desafio Prático do Dia</span>
+                                </div>
+                                <p id="devocional-challenge">Envie uma mensagem elegante de incentivo e bênção para alguém que você não conversa há algum tempo.</p>
+                            </div>
+                        </div>
+
+                        <div class="card-action">
+                            <button id="btn-complete-devotional" class="btn-primary">
+                                <span>CONCLUIR DEVOCIONAL</span>
+                                <span class="badge-xp">+10 XP</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- SIDEBAR INFO CARDS -->
+                    <div class="sidebar-cards">
+                        <!-- PLAN PROGRESS CARD -->
+                        <div class="glass-card progress-card animate-card" style="animation-delay: 0.1s">
+                            <h3>Plano de Leitura Ativo</h3>
+                            <div id="no-active-plan-msg" class="no-plan-message">
+                                Você não está inscrito em nenhum plano de leitura.
+                                <button class="btn-secondary link-to-hub" style="margin-top: 15px;">Explorar Planos</button>
+                            </div>
+                            <div id="active-plan-container" class="plan-details-box hidden">
+                                <h4 id="active-plan-title" class="plan-title">Provérbios em 25 Dias</h4>
+                                <div class="plan-progress-meta">
+                                    <span id="active-plan-day-info">Dia 1 de 25</span>
+                                    <span id="active-plan-percent">4%</span>
+                                </div>
+                                <div class="plan-progress-track-small">
+                                    <div id="active-plan-progress-bar" class="plan-progress-fill" style="width: 4%"></div>
+                                </div>
+                                <div class="plan-day-details">
+                                    <span class="label">Leitura de hoje:</span>
+                                    <strong id="active-plan-day-target">Provérbios 1</strong>
+                                </div>
+                                <button id="btn-read-today-plan" class="btn-primary-small">Ler Capítulo Hoje</button>
+                            </div>
+                        </div>
+
+                        <!-- MOTIVATIONAL CARD (DYNAMICS) -->
+                        <div class="glass-card streak-motivate-card animate-card" style="animation-delay: 0.2s">
+                            <h3>Fogo de Consagração</h3>
+                            <div class="streak-milestone-box">
+                                <div class="streak-large-display">
+                                    <span id="streak-large-num">0</span>
+                                    <span class="label">Dias Seguidos</span>
+                                </div>
+                                <p id="streak-motivate-text">Comece sua consagração hoje! Faça o devocional diário e conquiste sua primeira medalha.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TELA 2: HUB DE PLANOS E ESTUDOS -->
+            <section id="screen-hub" class="app-screen">
+                <div class="screen-hero">
+                    <h1 class="hero-title">HUB DE ESTUDOS</h1>
+                    <p class="hero-subtitle">Escolha trilhas organizadas para manter o foco e constância espiritual.</p>
+                </div>
+
+                <!-- Category Filters (Reference styling: Japan Tours Navbar) -->
+                <div class="category-filters-container">
+                    <button class="filter-tab active" data-category="todos">Todos</button>
+                    <button class="filter-tab" data-category="Constância">Constância</button>
+                    <button class="filter-tab" data-category="Apoio Emocional">Apoio Emocional</button>
+                    <button class="filter-tab" data-category="Planos de Vida">Planos de Vida</button>
+                </div>
+
+                <!-- Plans Cards Grid -->
+                <div id="plans-grid" class="plans-grid">
+                    <!-- Cards will be populated dynamically -->
+                </div>
+            </section>
+
+            <!-- TELA 3: LEITOR BÍBLICO INTELIGENTE -->
+            <section id="screen-reader" class="app-screen">
+                <div class="screen-hero">
+                    <h1 class="hero-title">LEITOR BÍBLICO</h1>
+                    <p class="hero-subtitle">Leitura focada com explicações teológicas integradas ao toque.</p>
+                </div>
+
+                <!-- Segmented Tab Controls (Study Bible style) -->
+                <div class="reader-tabs-container">
+                    <button class="reader-tab-btn active" data-reader-tab="tab-read">Leitura Livre</button>
+                    <button class="reader-tab-btn" data-reader-tab="tab-search">Pesquisa Temática & Estudo</button>
+                </div>
+
+                <!-- SUB-SCREEN PANEL 1: LEITURA LIVRE -->
+                <div id="panel-read" class="reader-panel active">
+                    <!-- Reader Navigation Controls -->
+                    <div class="reader-controls glass-card">
+                        <div class="control-group">
+                            <label for="select-book">Livro</label>
+                            <select id="select-book" class="styled-select">
+                                <!-- Populated dynamically -->
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label for="select-chapter">Capítulo</label>
+                            <select id="select-chapter" class="styled-select">
+                                <!-- Populated dynamically -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Bible Reading Interface -->
+                    <div class="bible-reader-box glass-card">
+                        <div class="reader-header">
+                            <h2 id="bible-chapter-title">Gênesis 1</h2>
+                            <span class="bible-version-tag">NVI (Nova Versão Internacional)</span>
+                        </div>
+
+                        <!-- Instruction alert (Premium) -->
+                        <div class="study-instruction-banner">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-info">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="16" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                            </svg>
+                            <span>Dica de Estudo Ativo: Toque em qualquer versículo sublinhado para abrir a gaveta de anotações teológicas.</span>
+                        </div>
+
+                        <div id="bible-text-content" class="bible-verses-list">
+                            <!-- Verses will be loaded here -->
+                        </div>
+
+                        <div class="reader-footer">
+                            <button id="btn-mark-chapter-read" class="btn-primary">
+                                <span>MARCAR CAPÍTULO COMO LIDO</span>
+                                <span class="badge-xp">+10 XP</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUB-SCREEN PANEL 2: PESQUISA TEMÁTICA & ESTUDO -->
+                <div id="panel-search" class="reader-panel">
+                    <div class="glass-card search-control-box">
+                        <h3>O Que Você Deseja Estudar Hoje?</h3>
+                        <p class="search-desc">Pesquise por qualquer palavra-chave, tema ou versículo na Bíblia completa.</p>
+                        
+                        <div class="search-input-wrapper">
+                            <input type="text" id="bible-search-input" placeholder="Ex: ansiedade, paz, fé, amor, sabedoria..." class="styled-search-input">
+                            <button id="btn-bible-search" class="btn-search-trigger">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="thematic-pills-label">Temas Frequentes de Estudo:</div>
+                        <div class="thematic-pills-list">
+                            <button class="theme-pill" data-theme="ansiedade">⚡ Ansiedade</button>
+                            <button class="theme-pill" data-theme="paz">✨ Paz</button>
+                            <button class="theme-pill" data-theme="sabedoria">🌿 Sabedoria</button>
+                            <button class="theme-pill" data-theme="amor">❤️ Amor</button>
+                            <button class="theme-pill" data-theme="coragem">🛡️ Coragem</button>
+                            <button class="theme-pill" data-theme="esperança">☀️ Esperança</button>
+                            <button class="theme-pill" data-theme="fé">🔥 Fé</button>
+                        </div>
+                    </div>
+
+                    <!-- Search Results Box -->
+                    <div id="bible-search-results-box" class="glass-card search-results-container hidden">
+                        <div class="search-results-header">
+                            <h3>Resultados Encontrados (<span id="search-results-count">0</span>)</h3>
+                        </div>
+                        <div id="bible-search-results" class="search-results-list">
+                            <!-- Populated dynamically with beautiful interactive cards -->
+                        </div>
+                    </div>
+                    
+                    <div id="search-empty-state" class="glass-card search-empty-box">
+                        <span style="font-size: 3rem;">📖</span>
+                        <h4>Faça sua Pesquisa</h4>
+                        <p>Os versículos correspondentes aparecerão aqui instantaneamente. Você poderá clicar para abri-los diretamente no Leitor.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TELA 4: DIÁRIO DE ORAÇÃO & GATILHOS -->
+            <section id="screen-prayers" class="app-screen">
+                <!-- FAITH MEMORIES GATILHO DE RETENÇÃO (Shown dynamically when a match is found) -->
+                <div id="faith-memories-container" class="faith-memories-wrapper hidden">
+                    <!-- Populated dynamically -->
+                </div>
+
+                <div class="screen-hero">
+                    <h1 class="hero-title">DIÁRIO DE ORAÇÃO</h1>
+                    <p class="hero-subtitle">Registre seus clamores e celebre os agradecimentos na sua jornada.</p>
+                </div>
+
+                <div class="grid-layout">
+                    <!-- CREATE PRAYER FORM -->
+                    <div class="glass-card prayer-form-card animate-card">
+                        <h3>Novo Registro de Fé</h3>
+                        <form id="prayer-form">
+                            <div class="form-group">
+                                <label for="prayer-title">Título do Clamor</label>
+                                <input type="text" id="prayer-title" required placeholder="Ex: Direcionamento profissional ou Paz familiar" class="styled-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="prayer-desc">Descrição / Detalhes</label>
+                                <textarea id="prayer-desc" rows="4" placeholder="Escreva com sinceridade e detalhes..." class="styled-textarea"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Tipo de Registro</label>
+                                <div class="radio-group">
+                                    <label class="radio-label">
+                                        <input type="radio" name="prayer-type" value="Pedido" checked>
+                                        <span class="radio-custom"></span>
+                                        <span>Pedido de Clamor</span>
+                                    </label>
+                                    <label class="radio-label">
+                                        <input type="radio" name="prayer-type" value="Agradecimento">
+                                        <span class="radio-custom"></span>
+                                        <span>Agradecimento</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-primary w-full">REGISTRAR NO DIÁRIO</button>
+                        </form>
+                    </div>
+
+                    <!-- PRAYER LISTS -->
+                    <div class="prayers-list-container">
+                        <!-- Tabs -->
+                        <div class="prayer-tabs">
+                            <button class="prayer-tab active" data-tab="clamor">Em Clamor</button>
+                            <button class="prayer-tab" data-tab="respondidas">Respondidas</button>
+                        </div>
+
+                        <!-- Content List -->
+                        <div id="prayers-list" class="prayers-list">
+                            <!-- Prayers loaded dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TELA 5: PERFIL, CONQUISTAS & RANKING -->
+            <section id="screen-profile" class="app-screen">
+                <div class="screen-hero">
+                    <h1 class="hero-title">JORNADA DE FÉ</h1>
+                    <p class="hero-subtitle">Veja seu crescimento, medalhas ativas e ranking saudável.</p>
+                </div>
+
+                <!-- Profile Header with Photo -->
+                <div class="glass-card profile-header-section animate-card">
+                    <div class="profile-avatar-wrapper" id="profile-avatar-trigger">
+                        <div class="profile-avatar">
+                            <div id="profile-avatar-display" class="profile-avatar-placeholder">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="36" height="36"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                            </div>
+                        </div>
+                        <div class="profile-avatar-edit">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                        </div>
+                        <input type="file" id="profile-photo-input" accept="image/*" style="display:none;">
+                    </div>
+                    <div class="profile-user-info">
+                        <div id="profile-display-name" class="profile-display-name">Guerreiro da Fé</div>
+                        <div id="profile-email" class="profile-email">email@aeterna.app</div>
+                    </div>
+                    <button id="btn-logout" class="btn-logout">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                        SAIR DA CONTA
+                    </button>
+                </div>
+
+                <div class="grid-layout">
+                    <!-- USER PROGRESS & BADGES MURAL -->
+                    <div class="glass-card animate-card">
+                        <h3>Mural de Medalhas</h3>
+                        <p class="mural-subtitle">Conquiste marcos dedicando tempo diário à consagração espiritual.</p>
+                        
+                        <div id="badges-mural" class="badges-grid">
+                            <!-- Medal 1 -->
+                            <div class="badge-item locked" id="badge-altar_bronze">
+                                <div class="badge-icon-wrapper">
+                                    <div class="badge-glow"></div>
+                                    <svg viewBox="0 0 24 24" class="badge-icon">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/>
+                                    </svg>
+                                </div>
+                                <span class="badge-title">Altar de Bronze</span>
+                                <span class="badge-desc">Primeiro clamor registrado</span>
+                            </div>
+                            
+                            <!-- Medal 2 -->
+                            <div class="badge-item locked" id="badge-guerreiro_fe">
+                                <div class="badge-icon-wrapper">
+                                    <div class="badge-glow"></div>
+                                    <svg viewBox="0 0 24 24" class="badge-icon">
+                                        <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 15l-4-4 1.41-1.41L10 13.17l7.59-7.59L19 7l-9 9z"/>
+                                    </svg>
+                                </div>
+                                <span class="badge-title">Guerreiro da Fé</span>
+                                <span class="badge-desc">7 dias de sequência (Streak)</span>
+                            </div>
+
+                            <!-- Medal 3 -->
+                            <div class="badge-item locked" id="badge-perseveranca">
+                                <div class="badge-icon-wrapper">
+                                    <div class="badge-glow"></div>
+                                    <svg viewBox="0 0 24 24" class="badge-icon">
+                                        <path d="M12 22c5.52 0 10-4.48 10-10S17.52 2 12 2 2 6.48 2 12s4.48 10 10 10zm1-15h-2v6h6v-2h-4V7z"/>
+                                    </svg>
+                                </div>
+                                <span class="badge-title">Perseverança</span>
+                                <span class="badge-desc">30 dias de sequência (Streak)</span>
+                            </div>
+                        </div>
+
+                        <!-- Simulated notification settings card (Retention trigger) -->
+                        <div class="notification-retention-box">
+                            <div class="retention-info">
+                                <strong>Lembretes Locais</strong>
+                                <p>Disparar alerta se o devocional não for concluído até as 20h.</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="toggle-notifications" checked>
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- MAPA DE PROGRESSO BÍBLICO -->
+                    <div class="glass-card bible-progress-card animate-card" style="animation-delay: 0.05s">
+                        <div class="progress-map-header">
+                            <h3>Mapa de Leitura Bíblica</h3>
+                            <div class="progress-map-stats">
+                                <span id="progress-books-read" class="stat-badge">0/66</span>
+                                <span class="stat-label">livros</span>
+                            </div>
+                        </div>
+                        <p class="mural-subtitle">Cada bloco representa um livro da Bíblia. Toque para navegar.</p>
+                        
+                        <div class="progress-map-legend">
+                            <div class="legend-item"><span class="legend-swatch legend-none"></span>Não lido</div>
+                            <div class="legend-item"><span class="legend-swatch legend-partial"></span>Em progresso</div>
+                            <div class="legend-item"><span class="legend-swatch legend-complete"></span>Concluído</div>
+                        </div>
+
+                        <div class="bible-testament-label">Antigo Testamento</div>
+                        <div id="progress-grid-ot" class="progress-grid"></div>
+                        
+                        <div class="bible-testament-label">Novo Testamento</div>
+                        <div id="progress-grid-nt" class="progress-grid"></div>
+                    </div>
+
+                    <!-- COMMUNITY HEALTHY RANKING -->
+                    <div class="glass-card ranking-card animate-card" style="animation-delay: 0.1s">
+                        <h3>Ranking da Comunidade</h3>
+                        <p class="mural-subtitle">Competição positiva focada no mútuo crescimento espiritual.</p>
+                        
+                        <div class="ranking-list" id="community-ranking-list"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- ✨ REVELAÇÃO DIVINA — Immersive Random Verse Experience ✨ -->
+    <div id="revelacao-overlay" class="revelacao-overlay hidden">
+        <canvas id="revelacao-particles" class="revelacao-canvas"></canvas>
+        <div class="revelacao-content">
+            <div class="revelacao-cross">✝</div>
+            <blockquote id="revelacao-verse-text" class="revelacao-verse"></blockquote>
+            <cite id="revelacao-verse-ref" class="revelacao-ref"></cite>
+            <div class="revelacao-actions">
+                <button id="btn-revelacao-new" class="revelacao-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                    Nova Revelação
+                </button>
+                <button id="btn-revelacao-share" class="revelacao-btn revelacao-btn-share">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                    Compartilhar
+                </button>
+                <button id="btn-revelacao-close" class="revelacao-btn revelacao-btn-close">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Action Button — Revelação Divina Trigger -->
+    <button id="fab-revelacao" class="fab-revelacao" title="Revelação Divina — Versículo Aleatório">
+        <span class="fab-glow"></span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="26" height="26">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+            <path d="M2 17l10 5 10-5"></path>
+            <path d="M2 12l10 5 10-5"></path>
+        </svg>
+    </button>
+
+    <!-- GLOBAL ACTIVE STUDY BOTTOM DRAWER (Bottom Sheet) -->
+    <div id="study-drawer-overlay" class="drawer-overlay"></div>
+    <div id="study-drawer" class="study-bottom-sheet">
+        <div class="drawer-handle"></div>
+        <div class="drawer-content">
+            <div class="drawer-header">
+                <h3 id="drawer-verse-title">Provérbios 1:1</h3>
+                <button id="btn-close-drawer" class="btn-close-drawer">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-close">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="drawer-body">
+                <p id="drawer-verse-text-copy" class="drawer-verse-text">"Provérbios de Salomão, filho de Davi, rei de Israel:"</p>
+                
+                <!-- MARCA-TEXTO BUTTON -->
+                <button id="btn-toggle-highlight" class="btn-toggle-highlight">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-highlight" width="16" height="16">
+                        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
+                        <path d="m9 12 2 2 4-4"></path>
+                    </svg>
+                    <span id="btn-highlight-text">Grifar Versículo</span>
+                </button>
+                
+                <div class="study-note-section">
+                    <div class="study-note-header">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-study-book">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                            <path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5v-15z"></path>
+                        </svg>
+                        <span>Comentário Teológico de Estudo</span>
+                    </div>
+                    <p id="drawer-study-note-content" class="study-note-content">Nenhuma nota teológica disponível para este versículo.</p>
+                </div>
+
+                <!-- ESTUDO LINGUÍSTICO (Hebreus/Grego) -->
+                <div id="drawer-original-languages" class="study-premium-insight-card">
+                    <div class="insight-header">
+                        <span class="insight-badge">ESTUDO LINGUÍSTICO</span>
+                        <span id="drawer-original-word-title" class="original-word">Hebraico: Hokhmah (חָכְmָה)</span>
+                    </div>
+                    <p id="drawer-original-word-desc" class="insight-desc">Significa "Sabedoria Divina" — a habilidade prática de viver em harmonia com os princípios celestiais.</p>
+                </div>
+
+                <!-- MINHAS ANOTAÇÕES PESSOAIS -->
+                <div class="personal-notes-section">
+                    <div class="personal-notes-header">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-notes" width="14" height="14">
+                            <path d="M12 20h9"></path>
+                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                        </svg>
+                        <span>Minhas Anotações de Estudo</span>
+                    </div>
+                    <textarea id="drawer-personal-notes-input" placeholder="Escreva o que Deus ministrou ao seu coração neste versículo..." rows="3" class="drawer-notes-textarea"></textarea>
+                    <button id="btn-save-personal-notes" class="btn-save-notes">
+                        <span>SALVAR REVELAÇÃO PESSOAL</span>
+                    </button>
+                </div>
+
+                <!-- COMPARTILHAR VERSÍCULO COMO CARD -->
+                <button id="btn-share-verse" class="btn-share-verse">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                        <circle cx="18" cy="5" r="3"></circle>
+                        <circle cx="6" cy="12" r="3"></circle>
+                        <circle cx="18" cy="19" r="3"></circle>
+                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                    </svg>
+                    <span>COMPARTILHAR VERSÍCULO</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SHARE VERSE CARD MODAL -->
+    <div id="share-card-modal" class="share-card-overlay hidden">
+        <div class="share-card-container">
+            <div class="share-card-header">
+                <h3>Seu Versículo para Compartilhar</h3>
+                <button id="btn-close-share" class="btn-close-drawer">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-close">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <canvas id="share-verse-canvas" width="1080" height="1080"></canvas>
+            <div class="share-card-actions">
+                <button id="btn-download-card" class="btn-share-action btn-share-download">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    <span>BAIXAR IMAGEM</span>
+                </button>
+                <button id="btn-copy-card" class="btn-share-action btn-share-copy">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                    <span>COPIAR</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- STREAK CELEBRATION MODAL (Duolingo effect) -->
+    <div id="streak-modal" class="modal-overlay hidden">
+        <div class="glass-card modal-card animate-scale">
+            <div class="celebration-particles">🔥</div>
+            <h2 class="celebration-title">SEQUÊNCIA CONQUISTADA!</h2>
+            <div class="streak-huge-number">
+                <span id="modal-streak-num">1</span>
+                <span class="label">DIA</span>
+            </div>
+            <p id="modal-celebration-message">A constância é a ponte que une a disciplina à intimidade espiritual. Continue forte!</p>
+            <button id="btn-close-modal" class="btn-primary w-full">AMÉM, CONTINUAR!</button>
+        </div>
+    </div>
+
+    <!-- GLOBAL TAB BAR NAVIGATION SYSTEM (Reference design styling) -->
+    <nav class="app-nav-bar">
+        <button class="nav-item active" data-target="screen-home">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            <span class="nav-text">Home</span>
+        </button>
+        
+        <button class="nav-item" data-target="screen-hub">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+            <span class="nav-text">Planos</span>
+        </button>
+
+        <button class="nav-item" data-target="screen-reader">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+            </svg>
+            <span class="nav-text">Leitor</span>
+        </button>
+
+        <button class="nav-item" data-target="screen-prayers">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z"></path>
+                <path d="M12 8v4"></path>
+                <path d="M12 16h.01"></path>
+            </svg>
+            <span class="nav-text">Oração</span>
+        </button>
+
+        <button class="nav-item" data-target="screen-profile">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span class="nav-text">Perfil</span>
+        </button>
+    </nav>
+
+    <!-- Core Javascript Modules -->
+    <script type="module" src="supabase.js"></script>
+    <script type="module" src="app.js"></script>
+</body>
+</html>

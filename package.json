@@ -1,0 +1,15 @@
+{
+  "name": "aeterna",
+  "version": "1.0.0",
+  "description": "Aeterna — Disciplina Espiritual Gamificada",
+  "main": "src/app.js",
+  "scripts": {
+    "ingest": "node scripts/ingest.js",
+    "db:setup": "node scripts/db_setup.js",
+    "dev": "npx -y http-server ./src -p 3000 -c-1"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "pg": "^8.11.5"
+  }
+}

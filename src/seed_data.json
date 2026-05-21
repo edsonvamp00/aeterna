@@ -1,0 +1,122 @@
+{
+  "reading_plans": [
+    {
+      "id": "e5b5c90b-1111-477d-9999-e659b85c18c1",
+      "title": "Provérbios em 25 Dias",
+      "description": "Sabedoria diária aplicada à vida prática. Foco em tomadas de decisões inteligentes, finanças e relacionamentos saudáveis.",
+      "category": "Constância"
+    },
+    {
+      "id": "e5b5c90b-2222-477d-9999-e659b85c18c2",
+      "title": "Bíblia em 1 Ano Sem Ansiedade",
+      "description": "Uma jornada tranquila através de passagens reconfortantes com lógica anti-acúmulo, garantindo que você nunca se atrase.",
+      "category": "Constância"
+    },
+    {
+      "id": "e5b5c90b-3333-477d-9999-e659b85c18c3",
+      "title": "Vencendo a Ansiedade e o Medo",
+      "description": "Versículos selecionados e devocionais práticos focados em trazer paz mental e descanso espiritual diário.",
+      "category": "Apoio Emocional"
+    },
+    {
+      "id": "e5b5c90b-4444-477d-9999-e659b85c18c4",
+      "title": "Crescimento na Oração e Fé",
+      "description": "Um plano estruturado para aprofundar sua vida de intimidade diária com o Criador e expandir sua fé ativa.",
+      "category": "Apoio Emocional"
+    },
+    {
+      "id": "e5b5c90b-5555-477d-9999-e659b85c18c5",
+      "title": "Rotina do Novo Convertido",
+      "description": "Primeiros passos essenciais para entender a graça, a leitura diária e a comunidade de fé.",
+      "category": "Planos de Vida"
+    }
+  ],
+  "reading_plan_days": [
+    {
+      "plan_id": "e5b5c90b-1111-477d-9999-e659b85c18c1",
+      "day_number": 1,
+      "target_chapters": "Provérbios 1",
+      "estimated_time_minutes": 5
+    },
+    {
+      "plan_id": "e5b5c90b-1111-477d-9999-e659b85c18c1",
+      "day_number": 2,
+      "target_chapters": "Provérbios 2",
+      "estimated_time_minutes": 5
+    },
+    {
+      "plan_id": "e5b5c90b-1111-477d-9999-e659b85c18c1",
+      "day_number": 3,
+      "target_chapters": "Provérbios 3",
+      "estimated_time_minutes": 6
+    },
+    {
+      "plan_id": "e5b5c90b-1111-477d-9999-e659b85c18c1",
+      "day_number": 4,
+      "target_chapters": "Provérbios 4",
+      "estimated_time_minutes": 5
+    },
+    {
+      "plan_id": "e5b5c90b-1111-477d-9999-e659b85c18c1",
+      "day_number": 5,
+      "target_chapters": "Provérbios 5",
+      "estimated_time_minutes": 7
+    },
+    {
+      "plan_id": "e5b5c90b-3333-477d-9999-e659b85c18c3",
+      "day_number": 1,
+      "target_chapters": "Filipenses 4",
+      "estimated_time_minutes": 6
+    },
+    {
+      "plan_id": "e5b5c90b-3333-477d-9999-e659b85c18c3",
+      "day_number": 2,
+      "target_chapters": "Salmos 23",
+      "estimated_time_minutes": 4
+    },
+    {
+      "plan_id": "e5b5c90b-3333-477d-9999-e659b85c18c3",
+      "day_number": 3,
+      "target_chapters": "Isaías 41",
+      "estimated_time_minutes": 5
+    },
+    {
+      "plan_id": "e5b5c90b-2222-477d-9999-e659b85c18c2",
+      "day_number": 1,
+      "target_chapters": "Gênesis 1, Gênesis 2",
+      "estimated_time_minutes": 10
+    },
+    {
+      "plan_id": "e5b5c90b-2222-477d-9999-e659b85c18c2",
+      "day_number": 2,
+      "target_chapters": "Gênesis 3, Gênesis 4",
+      "estimated_time_minutes": 12
+    }
+  ],
+  "daily_devotionals": [
+    {
+      "id": "2026-05-20",
+      "verse_reference": "Filipenses 4:6-7",
+      "verse_text": "Não andeis ansiosos por coisa alguma; antes em tudo as vossas petições sejam em todo tempo conhecidas diante de Deus pela oração e súplica, com ação de graças. E a paz de Deus, que excede todo o entendimento, guardará os vossos corações e os vossos sentimentos em Cristo Jesus.",
+      "reflection": "A ansiedade tenta paralisar o presente antecipando um futuro que não nos pertence. Entregar nossas petições in oração nos reposiciona de vítimas das circunstâncias para herdeiros da paz divina. Quando agradecemos antecipadamente, demonstramos confiança de que o amanhã está seguro.",
+      "prayer_text": "Senhor Pai, entrego todas as minhas inquietações em Tuas mãos. Peço que a Tua paz, que ultrapassa a lógica humana, guarde minha mente de pensamentos acelerados. Obrigado pelo Teu cuidado diário. Amém.",
+      "challenge_of_the_day": "Escreva em um papel 3 motivos de gratidão hoje e faça uma oração curta apenas agradecendo por eles."
+    },
+    {
+      "id": "2026-05-21",
+      "verse_reference": "Provérbios 3:5-6",
+      "verse_text": "Confia no Senhor de todo o teu coração, e não te estribes no teu próprio entendimento. Reconhece-o em todos os teus caminhos, e ele endireitará as tuas veredas.",
+      "reflection": "Viver dependente de nossas próprias conclusões gera estresse e cansaço. A verdadeira fé envolve render o volante da nossa trajetória a Alguém que enxerga o panorama completo. Confiar envolve soltar o controle para colher a clareza do direcionamento divino.",
+      "prayer_text": "Pai querido, decido não confiar em minha inteligência limitada. Guia-me em cada escolha hoje. Quero reconhecer a Tua presença na minha rotina de trabalho, em família e nos meus momentos de descanso. Direciona meus passos. Amém.",
+      "challenge_of_the_day": "Envie uma mensagem elegante de incentivo e bênção para alguém que você não conversa há algum tempo."
+    },
+    {
+      "id": "2026-05-22",
+      "verse_reference": "2 Timóteo 1:7",
+      "verse_text": "Porque Deus não nos deu o espírito de temor, mas de fortaleza, e de amor, e de moderação.",
+      "reflection": "O medo é um invasor que rouba nossa identidade. A presença de Deus em nós gera audácia amorosa e equilíbrio emocional. Quando o medo sussurrar insegurança, responda com a autoridade da fortaleza que provém da sua identidade filial.",
+      "prayer_text": "Senhor, rejeito todo espírito de medo sobre o meu dia. Eu me visto com a Tua força, decido caminhar em amor genuíno e peço autocontrole e moderação para tomar decisões com sabedoria e calma. Amém.",
+      "challenge_of_the_day": "Separe 5 minutos hoje para sentar em silêncio absoluto, respirar fundo e contemplar a grandeza de Deus."
+    }
+  ]
+}
