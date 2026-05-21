@@ -20,6 +20,9 @@ class AeternaApp {
         // Initialize Theme preference and session variables
         this.theme = localStorage.getItem('ae_theme') || 'dark';
         this.currentUserSession = null;
+
+        // Audio Devotional State variables
+        this.audioState = 'stopped'; // 'stopped' | 'playing' | 'paused'
     }
 
     async init() {
@@ -55,6 +58,9 @@ class AeternaApp {
 
         // Setup Revelação Divina (Surprise Feature)
         this.setupRevelacaoDivina();
+
+        // Setup Devotional Audio Narration
+        this.setupDevotionalAudio();
 
         // Initial Screen render (if logged in, the auth check handles screen, otherwise we render)
         if (this.currentUser) {
@@ -473,6 +479,8 @@ class AeternaApp {
                 const confirmLogout = confirm("Deseja realmente sair da sua conta?");
                 if (!confirmLogout) return;
                 
+                this.stopAudioDevotional();
+                
                 try {
                     if (this.currentUserSession && this.currentUserSession.authType === 'supabase') {
                         const supabase = window.supabase;
@@ -722,6 +730,10 @@ class AeternaApp {
 
     // --- SCREEN INITIALIZATION RENDERING ---
     async renderCurrentScreen() {
+        if (this.currentScreen !== 'screen-home') {
+            this.stopAudioDevotional();
+        }
+
         switch (this.currentScreen) {
             case 'screen-home':
                 await this.renderHomeScreen();
@@ -2400,6 +2412,154 @@ class AeternaApp {
             console.warn('Clipboard write falhou:', err);
             // Fallback: download instead
             this.downloadVerseCard();
+        }
+    }
+
+    setupDevotionalAudio() {
+        const btnDevotional = document.getElementById('btn-audio-devotional');
+        const btnStop = document.getElementById('btn-audio-stop');
+
+        if (!btnDevotional || !btnStop) return;
+
+        btnDevotional.addEventListener('click', () => {
+            if (this.audioState === 'stopped') {
+                this.playAudioDevotional();
+            } else if (this.audioState === 'playing') {
+                this.pauseAudioDevotional();
+            } else if (this.audioState === 'paused') {
+                this.resumeAudioDevotional();
+            }
+        });
+
+        btnStop.addEventListener('click', () => {
+            this.stopAudioDevotional();
+        });
+
+        // Warm up voices
+        if (window.speechSynthesis) {
+            window.speechSynthesis.getVoices();
+        }
+    }
+
+    async playAudioDevotional() {
+        const dateText = document.getElementById('devocional-date')?.textContent || '';
+        const verseText = document.getElementById('devocional-verse-text')?.textContent || '';
+        const verseRef = document.getElementById('devocional-verse-ref')?.textContent || '';
+        const reflection = document.getElementById('devocional-reflection')?.textContent || '';
+        const prayer = document.getElementById('devocional-prayer')?.textContent || '';
+        const challenge = document.getElementById('devocional-challenge')?.textContent || '';
+
+        if (!verseText) return;
+
+        const cleanVerse = verseText.replace(/[\"“”]/g, '').trim();
+        const cleanReflection = reflection.trim();
+        const cleanPrayer = prayer.trim();
+        const cleanChallenge = challenge.trim();
+
+        // Construct a premium narrative
+        const textToRead = `Devocional de ${dateText}. 
+        Versículo bíblico em ${verseRef}: ${cleanVerse}. 
+        Reflexão do dia: ${cleanReflection}. 
+        Oração: ${cleanPrayer}. 
+        Desafio de hoje: ${cleanChallenge}.`;
+
+        if (window.speechSynthesis) {
+            window.speechSynthesis.cancel();
+        }
+
+        this.utterance = new SpeechSynthesisUtterance(textToRead);
+        this.utterance.lang = 'pt-BR';
+        
+        // Find pt-BR voice
+        const voices = window.speechSynthesis.getVoices();
+        const ptVoice = voices.find(voice => voice.lang.includes('pt-BR') || voice.lang.includes('pt_BR'));
+        if (ptVoice) {
+            this.utterance.voice = ptVoice;
+        }
+
+        this.utterance.rate = 1.0;
+        this.utterance.pitch = 1.0;
+
+        this.utterance.onend = () => {
+            this.stopAudioDevotional();
+        };
+
+        this.utterance.onerror = (e) => {
+            console.warn('SpeechSynthesis error:', e);
+            if (e.error !== 'interrupted') {
+                this.stopAudioDevotional();
+            }
+        };
+
+        this.audioState = 'playing';
+        this.updateAudioButtonState('playing');
+
+        window.speechSynthesis.speak(this.utterance);
+    }
+
+    pauseAudioDevotional() {
+        if (window.speechSynthesis && window.speechSynthesis.speaking) {
+            window.speechSynthesis.pause();
+            this.audioState = 'paused';
+            this.updateAudioButtonState('paused');
+        }
+    }
+
+    resumeAudioDevotional() {
+        if (window.speechSynthesis && window.speechSynthesis.paused) {
+            window.speechSynthesis.resume();
+            this.audioState = 'playing';
+            this.updateAudioButtonState('playing');
+        } else {
+            this.playAudioDevotional();
+        }
+    }
+
+    stopAudioDevotional() {
+        if (window.speechSynthesis) {
+            window.speechSynthesis.cancel();
+        }
+        this.audioState = 'stopped';
+        this.updateAudioButtonState('stopped');
+    }
+
+    updateAudioButtonState(state) {
+        const btnDevotional = document.getElementById('btn-audio-devotional');
+        const btnStop = document.getElementById('btn-audio-stop');
+        
+        if (!btnDevotional || !btnStop) return;
+
+        if (state === 'stopped') {
+            btnStop.classList.add('hidden');
+            btnDevotional.innerHTML = `
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-audio-play">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+                <span id="btn-audio-text">Ouvir Áudio</span>
+            `;
+        } else if (state === 'playing') {
+            btnStop.classList.remove('hidden');
+            btnDevotional.innerHTML = `
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-audio-pause" style="fill: currentColor;">
+                    <rect x="6" y="4" width="4" height="16"></rect>
+                    <rect x="14" y="4" width="4" height="16"></rect>
+                </svg>
+                <span id="btn-audio-text">Pausar</span>
+                <div class="audio-visualizer-mini animating">
+                    <span></span><span></span><span></span>
+                </div>
+            `;
+        } else if (state === 'paused') {
+            btnStop.classList.remove('hidden');
+            btnDevotional.innerHTML = `
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-audio-play">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+                <span id="btn-audio-text">Continuar</span>
+                <div class="audio-visualizer-mini">
+                    <span></span><span></span><span></span>
+                </div>
+            `;
         }
     }
 }
